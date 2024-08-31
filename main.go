@@ -16,5 +16,7 @@ func main() {
 	if err := database.InitializeDatabasePool(); err != nil {
 		panic(err)
 	}
-	services.AssignPermsInExcelR(9467)
+	// services.AssignPermsInExcelR(9467)
+
+	services.AddFaceToDataRepo(32019, 1036, "1025A001000028")
 }

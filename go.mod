@@ -1,15 +1,15 @@
 module face_management
 
-go 1.22.3
+go 1.22
 
 require (
-	github.com/aws/aws-sdk-go v1.53.6
-	github.com/confluentinc/confluent-kafka-go/v2 v2.4.0
+	github.com/aws/aws-sdk-go v1.55.5
+	github.com/confluentinc/confluent-kafka-go/v2 v2.5.0
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-playground/validator/v10 v10.20.0
+	github.com/go-playground/validator/v10 v10.22.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
-	github.com/jackc/pgx/v5 v5.5.5
+	github.com/jackc/pgx/v5 v5.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.9.0
@@ -46,7 +46,7 @@ require (
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
-	golang.org/x/sync v0.6.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect

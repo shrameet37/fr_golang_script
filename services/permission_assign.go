@@ -103,3 +103,67 @@ func AssignPermsInExcelR(accessPointId int) {
 	}
 
 }
+
+func AddFaceToDataRepo(accessorId int, organisationId int, serialNumber string) {
+
+	exists, faceDataId, appError := database.OfdiDb.GetFaceDataIdForAccessorId(organisationId, accessorId)
+	if appError != nil {
+		log.Panic(appError)
+	}
+
+	if !exists {
+		log.Panic("FaceDataId does not exist")
+	}
+
+	exists, faceDataIdDetails, appError := database.OfdiDb.GetFaceDataIdDetails(faceDataId)
+	if appError != nil {
+		log.Panic(appError)
+	}
+
+	if !exists {
+		log.Panic("FaceDataId details do not exist")
+	}
+
+	DataRepoRequest := models.AddDataToDataRepoRequest{
+		DataType:       "FR",
+		DataId:         faceDataId,
+		Data:           string(faceDataIdDetails.FaceData),
+		NoOfKeysNeeded: 1,
+	}
+
+	dataRepoResponse, appError := interactors.AddDataToDataRepo(&DataRepoRequest)
+	if appError != nil {
+		errMsg := fmt.Sprintf("processDevicePermission->GetFaceDataIdDetails: Couldn't GetFaceDataIdDetails fro face Id %d ", faceDataIdDetails.FaceDataId)
+		log.Panic(errMsg)
+	}
+
+	for _, drKey := range dataRepoResponse.Message.Keys {
+		log.Println("KeyID = ", drKey.Id)
+		log.Println("ValidationKey = ", drKey.Key)
+
+		iotEngineCommand := models.IotEngineCommandMsg{
+			Version:        2,
+			SrcAppID:       0x81,
+			DestAppID:      models.GATEWAY_FACE_MANAGER_APP_ID,
+			IsLiveMsg:      false,
+			Target:         "device",
+			TargetSerialNo: serialNumber,
+			MsgType:        "add_user_face",
+			MsgTypeVer:     1,
+			UserId:         uint32(accessorId),
+			UserName:       faceDataIdDetails.UserName,
+			KeyId:          uint32(drKey.Id),
+			ValidationKey:  drKey.Key,
+			MessageId:      uuid.New(),
+		}
+
+		msg, err := json.Marshal(iotEngineCommand)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println(string(msg))
+
+	}
+
+}
